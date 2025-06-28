@@ -541,7 +541,7 @@ export default function HomePage(): React.ReactElement {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-amber-400 mb-2">12+</div>
-                    <div className="text-slate-300 text-sm">Years Experience</div>
+                    <div className="text-slate-300 text-sm">Years Combined Experience</div>
                   </div>
                 </div>
               </CardContent>
@@ -554,9 +554,9 @@ export default function HomePage(): React.ReactElement {
       <section id="team" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Expert Team with Proven Results</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Meet Our Founding Team</h2>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Senior engineers with deep fintech and AI experience from Morgan Stanley, Barclays, and top firms
+              Expert founders and engineers with deep AI, ML, and fintech experience delivering production-ready solutions
             </p>
           </div>
 
@@ -564,14 +564,47 @@ export default function HomePage(): React.ReactElement {
             <Card className="bg-slate-800/50 border-slate-700 hover:border-amber-400/50 transition-all duration-300 text-center">
               <CardHeader>
                 <Users className="h-12 w-12 text-amber-400 mx-auto mb-4" />
-                <CardTitle className="text-white text-lg">Ravi Prakash</CardTitle>
-                <CardDescription className="text-slate-300">Founder & Senior Principal Engineer</CardDescription>
+                <CardTitle className="text-white text-lg">Sruthi Vijayakumar</CardTitle>
+                <CardDescription className="text-slate-300">Co-Founder & Lead Data Scientist</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center justify-center space-x-2">
                     <Award className="h-4 w-4 text-amber-400" />
-                    <span className="text-slate-400 text-xs">Morgan Stanley VP</span>
+                    <span className="text-slate-400 text-xs">Expert Data Scientist</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-2">
+                    <Star className="h-4 w-4 text-amber-400" />
+                    <span className="text-slate-400 text-xs">ML Engineering Expert</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-2">
+                    <TrendingUp className="h-4 w-4 text-amber-400" />
+                    <span className="text-slate-400 text-xs">Proven Track Record</span>
+                  </div>
+                </div>
+                <a
+                  href="https://www.linkedin.com/in/sruthivijayakumar/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-amber-400 hover:text-amber-300 transition-colors text-sm"
+                >
+                  <Linkedin className="mr-1 h-3 w-3" />
+                  LinkedIn Profile
+                </a>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700 hover:border-amber-400/50 transition-all duration-300 text-center">
+              <CardHeader>
+                <Users className="h-12 w-12 text-amber-400 mx-auto mb-4" />
+                <CardTitle className="text-white text-lg">Ravi Prakash</CardTitle>
+                <CardDescription className="text-slate-300">Co-Founder & Senior Principal Engineer</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center justify-center space-x-2">
+                    <Award className="h-4 w-4 text-amber-400" />
+                    <span className="text-slate-400 text-xs">Senior Principal Engineer</span>
                   </div>
                   <div className="flex items-center justify-center space-x-2">
                     <Star className="h-4 w-4 text-amber-400" />
@@ -598,7 +631,7 @@ export default function HomePage(): React.ReactElement {
               <CardHeader>
                 <Users className="h-12 w-12 text-amber-400 mx-auto mb-4" />
                 <CardTitle className="text-white text-lg">Sai Dinesh D</CardTitle>
-                <CardDescription className="text-slate-300">Full-Stack Engineer</CardDescription>
+                <CardDescription className="text-slate-300">Full Stack AI Engineer</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 mb-4">
@@ -617,39 +650,6 @@ export default function HomePage(): React.ReactElement {
                 </div>
                 <a
                   href="https://www.linkedin.com/in/saidineshd/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-amber-400 hover:text-amber-300 transition-colors text-sm"
-                >
-                  <Linkedin className="mr-1 h-3 w-3" />
-                  LinkedIn Profile
-                </a>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700 hover:border-amber-400/50 transition-all duration-300 text-center">
-              <CardHeader>
-                <Users className="h-12 w-12 text-amber-400 mx-auto mb-4" />
-                <CardTitle className="text-white text-lg">Sruthi Vijayakumar</CardTitle>
-                <CardDescription className="text-slate-300">Frontend Engineer</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center justify-center space-x-2">
-                    <Code className="h-4 w-4 text-amber-400" />
-                    <span className="text-slate-400 text-xs">React/Next.js Expert</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <Globe className="h-4 w-4 text-amber-400" />
-                    <span className="text-slate-400 text-xs">UI/UX Design</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2">
-                    <Zap className="h-4 w-4 text-amber-400" />
-                    <span className="text-slate-400 text-xs">Performance Optimization</span>
-                  </div>
-                </div>
-                <a
-                  href="https://www.linkedin.com/in/sruthivijayakumar/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-amber-400 hover:text-amber-300 transition-colors text-sm"
@@ -749,10 +749,10 @@ export default function HomePage(): React.ReactElement {
             <div>
               <h2 className="text-4xl font-bold text-white mb-6">The Transmute Labs Advantage</h2>
               <p className="text-lg text-slate-300 mb-6 leading-relaxed">
-                We're not just another AI consulting firm. Our team combines deep enterprise experience from Morgan Stanley and Barclays with cutting-edge AI innovation. We deliver production-ready solutions that create immediate business value.
+                We're not just another AI consulting firm. Our founding team combines proven data science expertise with deep enterprise experience in fintech and AI innovation. We deliver production-ready solutions that create immediate business value.
               </p>
               <p className="text-lg text-slate-300 mb-8 leading-relaxed">
-                While large consulting firms take months to deliver theoretical frameworks, we deploy working AI systems in weeks. Our boutique approach means you get partner-level attention with hands-on technical implementation.
+                While large consulting firms take months to deliver theoretical frameworks, we deploy working AI systems in weeks. Our boutique approach means you get founder-level attention with hands-on technical implementation.
               </p>
               <div className="flex items-center space-x-4">
                 <Zap className="h-8 w-8 text-amber-400" />
@@ -768,7 +768,7 @@ export default function HomePage(): React.ReactElement {
                     <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
                     <div>
                       <div className="text-white font-semibold">Proven Enterprise Experience</div>
-                      <div className="text-slate-400 text-sm">12+ years at Morgan Stanley, Barclays, and top fintech firms</div>
+                      <div className="text-slate-400 text-sm">12+ years in fintech, AI, and data science with proven track record</div>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
