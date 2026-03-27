@@ -9,16 +9,16 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<string, string> = {
-  primary: 'bg-accent-amber text-deep hover:bg-amber-400 font-semibold',
-  outline: 'border border-white/20 text-text-secondary hover:bg-white/5 hover:text-text-primary bg-transparent',
-  ghost: 'text-text-secondary hover:bg-white/5 hover:text-text-primary',
+  primary: 'bg-gradient-to-r from-amber-400 to-amber-500 text-deep hover:from-amber-300 hover:to-amber-400 font-semibold shadow-lg shadow-amber-500/20 hover:shadow-amber-400/30 shimmer-btn',
+  outline: 'border border-white/15 text-text-secondary hover:text-text-primary hover:bg-white/[0.04] hover:border-amber-400/30 bg-transparent',
+  ghost: 'text-text-secondary hover:bg-white/[0.04] hover:text-text-primary',
 };
 
 const sizeStyles: Record<string, string> = {
-  default: 'h-10 px-4 py-2',
-  sm: 'h-9 px-3 text-sm',
-  lg: 'h-12 px-8 text-base',
-  icon: 'h-10 w-10',
+  default: 'h-11 px-5 py-2.5 text-sm',
+  sm: 'h-9 px-4 text-sm',
+  lg: 'h-13 px-8 py-3 text-base',
+  icon: 'h-11 w-11',
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -27,10 +27,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-lg font-medium transition-colors cursor-pointer',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:ring-offset-2 focus-visible:ring-offset-deep',
+          'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-300 cursor-pointer',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep',
           'disabled:opacity-50 disabled:pointer-events-none',
           'min-h-[44px] min-w-[44px]',
+          'active:scale-[0.98]',
           variantStyles[variant],
           sizeStyles[size],
           className,

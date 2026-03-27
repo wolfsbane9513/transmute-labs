@@ -1,95 +1,162 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
-import { Calendar, ExternalLink, CheckCircle, TrendingUp, Clock } from 'lucide-react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { useRef } from 'react';
+import { Calendar, ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Container } from '@/components/ui/container';
-import { fadeInUp, fadeIn } from '@/lib/animations';
-import { trustIndicators } from '@/lib/constants';
+import { fadeIn, textRevealContainer, textRevealWord } from '@/lib/animations';
 
-const iconMap: Record<string, React.FC<{ className?: string }>> = {
-  CheckCircle,
-  TrendingUp,
-  Clock,
-};
+const headlineWords = 'Turn AI Innovation Into Business Results'.split(' ');
 
 export function Hero() {
   const shouldReduceMotion = useReducedMotion();
-  const animVariant = shouldReduceMotion ? fadeIn : fadeInUp;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start'],
+  });
+
+  // Parallax: layers move at different speeds
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   return (
-    <section className="relative min-h-screen min-h-[100dvh] flex items-center justify-center overflow-hidden">
-      {/* Animated gradient blobs */}
-      <div className="absolute inset-0 overflow-hidden">
+    <section ref={containerRef} className="relative min-h-screen min-h-[100dvh] flex items-center justify-center overflow-hidden">
+      {/* Parallax background layer */}
+      <motion.div className="absolute inset-0" style={{ y: shouldReduceMotion ? 0 : bgY }}>
+        {/* Gradient orbs */}
+        <div className="absolute top-[15%] left-[10%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] rounded-full bg-blue-600/[0.08] blur-[120px] animate-float" />
+        <div className="absolute top-[40%] right-[5%] w-[35vw] h-[35vw] max-w-[500px] max-h-[500px] rounded-full bg-violet-600/[0.06] blur-[120px] animate-float-slow" />
+        <div className="absolute bottom-[10%] left-[30%] w-[30vw] h-[30vw] max-w-[450px] max-h-[450px] rounded-full bg-amber-500/[0.05] blur-[120px] animate-float-slower" />
+
+        {/* Subtle grid */}
         <div
-          className="absolute top-1/4 left-1/4 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full bg-blue-900/30 blur-3xl animate-blob1 will-change-transform"
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px',
+          }}
         />
-        <div
-          className="absolute top-1/3 right-1/4 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] rounded-full bg-violet-700/20 blur-3xl animate-blob2 will-change-transform"
-        />
-        <div
-          className="absolute bottom-1/4 left-1/3 w-[280px] h-[280px] sm:w-[450px] sm:h-[450px] rounded-full bg-indigo-900/25 blur-3xl animate-blob3 will-change-transform"
-        />
-      </div>
+      </motion.div>
 
-      {/* Content */}
-      <Container className="relative z-10">
-        <motion.div
-          className="max-w-4xl mx-auto text-center"
-          initial="hidden"
-          animate="visible"
-          variants={animVariant}
-        >
-          <Badge variant="outline" className="mb-6">
-            AI-Powered Business Transformation
-          </Badge>
-
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-6 leading-tight">
-            Turn AI Innovation Into{' '}
-            <span className="bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
-              Business Results
-            </span>
-          </h1>
-
-          <p className="text-lg sm:text-xl text-text-secondary mb-8 leading-relaxed max-w-2xl mx-auto">
-            Transmute Labs delivers production-ready AI solutions that drive measurable business impact.
-            From enterprise chatbots to predictive analytics, we transform ambitious ideas into competitive
-            advantages—in weeks, not months.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-            <Button
-              size="lg"
-              variant="primary"
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+      {/* Content layer with parallax */}
+      <motion.div
+        className="relative z-10 w-full"
+        style={shouldReduceMotion ? {} : { y: contentY, opacity, scale }}
+      >
+        <Container className="max-w-5xl">
+          <div className="text-center">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              Book Free AI Strategy Call
-              <Calendar className="ml-2 h-5 w-5" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              View Success Stories
-              <ExternalLink className="ml-2 h-5 w-5" />
-            </Button>
-          </div>
+              <Badge variant="outline" className="mb-8 backdrop-blur-sm">
+                AI-Powered Business Transformation
+              </Badge>
+            </motion.div>
 
-          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-text-muted text-sm">
-            {trustIndicators.map((item) => {
-              const Icon = iconMap[item.icon];
-              return (
-                <div key={item.text} className="flex items-center space-x-2">
-                  {Icon && <Icon className="h-4 w-4 text-accent-amber" />}
-                  <span>{item.text}</span>
+            {/* Headline with word-by-word reveal */}
+            <motion.h1
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-text-primary mb-8 leading-[1.1] tracking-tight"
+              initial="hidden"
+              animate="visible"
+              variants={shouldReduceMotion ? fadeIn : textRevealContainer}
+            >
+              {headlineWords.map((word, i) => (
+                <motion.span
+                  key={i}
+                  className={`inline-block mr-[0.25em] ${
+                    word === 'Business' || word === 'Results'
+                      ? 'text-gradient'
+                      : ''
+                  }`}
+                  variants={shouldReduceMotion ? fadeIn : textRevealWord}
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </motion.h1>
+
+            {/* Subtitle */}
+            <motion.p
+              className="text-lg sm:text-xl md:text-2xl text-text-secondary mb-12 leading-relaxed max-w-3xl mx-auto font-light"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.8 }}
+            >
+              Production-ready AI solutions that drive measurable impact.
+              Enterprise chatbots to predictive analytics — in weeks, not months.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1 }}
+            >
+              <Button
+                size="lg"
+                variant="primary"
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Book Free Strategy Call
+                <Calendar className="ml-2.5 h-4 w-4" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                View Our Work
+              </Button>
+            </motion.div>
+
+            {/* Trust metrics */}
+            <motion.div
+              className="flex flex-wrap justify-center items-center gap-8 sm:gap-12"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.3 }}
+            >
+              {[
+                { value: '12+', label: 'Years Experience' },
+                { value: '$180K+', label: 'Savings Delivered' },
+                { value: '50%', label: 'Faster Than Firms' },
+              ].map((item) => (
+                <div key={item.label} className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold text-gradient">{item.value}</div>
+                  <div className="text-xs sm:text-sm text-text-muted mt-1 tracking-wide uppercase">{item.label}</div>
                 </div>
-              );
-            })}
+              ))}
+            </motion.div>
           </div>
+        </Container>
+      </motion.div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+        style={{ opacity }}
+      >
+        <span className="text-text-muted text-xs tracking-widest uppercase">Scroll</span>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <ArrowDown className="h-4 w-4 text-text-muted" />
         </motion.div>
-      </Container>
+      </motion.div>
     </section>
   );
 }

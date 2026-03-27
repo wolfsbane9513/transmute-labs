@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/cn';
 
-const baseInputStyles = 'w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-colors min-h-[44px]';
+const baseInputStyles = 'w-full px-4 py-3 bg-white/[0.03] border border-white/[0.08] rounded-xl text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400/30 focus:bg-white/[0.05] transition-all duration-300 min-h-[44px]';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -12,7 +12,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || label.toLowerCase().replace(/\s+/g, '-');
     return (
       <div>
-        <label htmlFor={inputId} className="block text-sm font-medium text-text-secondary mb-2">
+        <label htmlFor={inputId} className="block text-sm font-medium text-text-secondary mb-2.5">
           {label}
         </label>
         <input
@@ -37,7 +37,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     const selectId = id || label.toLowerCase().replace(/\s+/g, '-');
     return (
       <div>
-        <label htmlFor={selectId} className="block text-sm font-medium text-text-secondary mb-2">
+        <label htmlFor={selectId} className="block text-sm font-medium text-text-secondary mb-2.5">
           {label}
         </label>
         <select
@@ -67,13 +67,13 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const textareaId = id || label.toLowerCase().replace(/\s+/g, '-');
     return (
       <div>
-        <label htmlFor={textareaId} className="block text-sm font-medium text-text-secondary mb-2">
+        <label htmlFor={textareaId} className="block text-sm font-medium text-text-secondary mb-2.5">
           {label}
         </label>
         <textarea
           ref={ref}
           id={textareaId}
-          className={cn(baseInputStyles, 'min-h-[120px]', className)}
+          className={cn(baseInputStyles, 'min-h-[140px] resize-none', className)}
           {...props}
         />
       </div>
