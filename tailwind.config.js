@@ -8,44 +8,41 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        border: "hsl(214.3 31.8% 91.4%)",
-        input: "hsl(214.3 31.8% 91.4%)",
-        ring: "hsl(221.2 83.2% 53.3%)",
-        background: "hsl(0 0% 100%)",
-        foreground: "hsl(222.2 84% 4.9%)",
-        primary: {
-          DEFAULT: "hsl(221.2 83.2% 53.3%)",
-          foreground: "hsl(210 40% 98%)",
-        },
-        secondary: {
-          DEFAULT: "hsl(210 40% 96%)",
-          foreground: "hsl(222.2 84% 4.9%)",
-        },
-        destructive: {
-          DEFAULT: "hsl(0 84.2% 60.2%)",
-          foreground: "hsl(210 40% 98%)",
-        },
-        muted: {
-          DEFAULT: "hsl(210 40% 96%)",
-          foreground: "hsl(215.4 16.3% 46.9%)",
-        },
-        accent: {
-          DEFAULT: "hsl(210 40% 96%)",
-          foreground: "hsl(222.2 84% 4.9%)",
-        },
-        popover: {
-          DEFAULT: "hsl(0 0% 100%)",
-          foreground: "hsl(222.2 84% 4.9%)",
-        },
-        card: {
-          DEFAULT: "hsl(0 0% 100%)",
-          foreground: "hsl(222.2 84% 4.9%)",
-        },
+        deep: '#050510',
+        base: '#0A0E1A',
+        elevated: '#111827',
+        glass: 'rgba(255, 255, 255, 0.05)',
+        'border-subtle': 'rgba(255, 255, 255, 0.08)',
+        'border-hover': 'rgba(59, 130, 246, 0.5)',
+        'text-primary': '#F1F5F9',
+        'text-secondary': '#94A3B8',
+        'text-muted': '#64748B',
+        'accent-blue': '#2563EB',
+        'accent-amber': '#F59E0B',
+        'accent-green': '#22C55E',
+        'accent-purple': '#8B5CF6',
       },
       borderRadius: {
-        lg: "0.5rem",
-        md: "calc(0.5rem - 2px)",
-        sm: "calc(0.5rem - 4px)",
+        '2xl': '1rem',
+      },
+      animation: {
+        'blob1': 'blob1 8s ease-in-out infinite',
+        'blob2': 'blob2 10s ease-in-out infinite',
+        'blob3': 'blob3 12s ease-in-out infinite',
+      },
+      keyframes: {
+        blob1: {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '50%': { transform: 'translate(30px, -20px)' },
+        },
+        blob2: {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '50%': { transform: 'translate(-20px, 30px)' },
+        },
+        blob3: {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '50%': { transform: 'translate(15px, 25px)' },
+        },
       },
     },
   },

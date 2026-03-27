@@ -2,15 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-deep: #050510;
+  --bg-base: #0A0E1A;
+  --bg-elevated: #111827;
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(59, 130, 246, 0.5);
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --accent-blue: #2563EB;
+  --accent-amber: #F59E0B;
+  --accent-green: #22C55E;
+  --accent-purple: #8B5CF6;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-deep text-text-primary;
+  }
+}
+
+/* Glass card base styles */
+.glass-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  transition: border-color 300ms ease-out, box-shadow 300ms ease-out;
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(12px)) {
+  .glass-card {
+    background: rgba(17, 24, 39, 0.95);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob1,
+  .animate-blob2,
+  .animate-blob3 {
+    animation: none !important;
   }
 }
