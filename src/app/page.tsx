@@ -1,3 +1,4 @@
+import { SmoothScrollProvider } from '@/components/providers/smooth-scroll';
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { Hero } from '@/components/sections/hero';
@@ -9,7 +10,7 @@ import { Contact } from '@/components/sections/contact';
 
 export default function HomePage() {
   return (
-    <>
+    <SmoothScrollProvider>
       <Navbar />
       <main id="main-content">
         <Hero />
@@ -20,6 +21,6 @@ export default function HomePage() {
         <Contact />
       </main>
       <Footer />
-    </>
+    </SmoothScrollProvider>
   );
 }

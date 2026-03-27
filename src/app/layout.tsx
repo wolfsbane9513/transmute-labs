@@ -1,18 +1,26 @@
 import type { Metadata } from 'next'
-import { DM_Sans } from 'next/font/google'
+import { DM_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   display: 'swap',
+  variable: '--font-dm-sans',
+})
+
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  display: 'swap',
+  variable: '--font-jetbrains',
 })
 
 export const metadata: Metadata = {
-  title: 'Transmute Labs - AI-Powered Business Transformation',
+  title: 'Transmute Labs — AI-Powered Business Transformation',
   description: 'Enterprise AI consulting delivering measurable results. 12+ years experience, $180K+ savings delivered. Intelligent automation, predictive analytics, full-stack AI platforms.',
   openGraph: {
-    title: 'Transmute Labs - AI-Powered Business Transformation',
+    title: 'Transmute Labs — AI-Powered Business Transformation',
     description: 'Enterprise AI consulting delivering measurable results.',
     url: 'https://www.transmutelabs.in',
     siteName: 'Transmute Labs',
@@ -21,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Transmute Labs - AI-Powered Business Transformation',
+    title: 'Transmute Labs — AI-Powered Business Transformation',
     description: 'Enterprise AI consulting delivering measurable results.',
   },
   icons: { icon: '/favicon.ico' },
@@ -33,8 +41,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={dmSans.className}>
+    <html lang="en" className={`${dmSans.variable} ${jetbrains.variable}`}>
+      <body className="font-sans grain-overlay">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent-amber focus:text-deep focus:rounded-lg focus:font-medium"
