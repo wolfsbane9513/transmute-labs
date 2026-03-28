@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
-  Users, Award, Star, TrendingUp, CheckCircle, Zap, Bot, Globe, Linkedin, ArrowUpRight,
+  Award, Star, TrendingUp, CheckCircle, Zap, Bot, Globe, Linkedin, ArrowUpRight,
 } from 'lucide-react';
 import { Section } from '@/components/layout/section';
 import { Container } from '@/components/ui/container';
@@ -12,9 +12,18 @@ import { Badge } from '@/components/ui/badge';
 import { fadeInUp, fadeIn, staggerContainer } from '@/lib/animations';
 import { teamMembers, expertise } from '@/lib/constants';
 
+import { PixelPortrait } from '@/components/ui/pixel-portrait';
+
 const iconMap: Record<string, React.FC<{ className?: string }>> = {
   Award, Star, TrendingUp, CheckCircle, Zap, Bot, Globe,
 };
+
+const memberHexColors = [
+  '#60A5FA', // Blue
+  '#FBBF24', // Amber
+  '#F472B6', // Pink/Purple
+  '#34D399', // Green
+];
 
 const memberGradients = [
   'from-blue-500/10 to-cyan-500/10',
@@ -64,9 +73,9 @@ export function Team() {
             >
               <Card className="h-full text-center" isViewable>
                 <CardHeader className="pb-4">
-                  {/* Avatar placeholder with gradient */}
-                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${memberGradients[i]} flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform duration-300`}>
-                    <Users className="h-10 w-10 text-text-secondary/60" />
+                  {/* 8-bit Pixel Portrait */}
+                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${memberGradients[i]} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500`}>
+                    <PixelPortrait variant={i} color={memberHexColors[i]} />
                   </div>
                   <CardTitle className="text-lg">{member.name}</CardTitle>
                   <CardDescription className="text-amber-400/80 text-xs font-medium tracking-wide uppercase">

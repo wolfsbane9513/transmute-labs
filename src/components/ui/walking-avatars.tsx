@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { AvatarAgent } from './avatar-agent';
 
 const avatarConfigs = [
-  { id: 'blue', color: 'text-blue-400', accentHex: '#60A5FA' },
-  { id: 'amber', color: 'text-amber-400', accentHex: '#FBBF24' },
-  { id: 'purple', color: 'text-purple-400', accentHex: '#A78BFA' },
-  { id: 'green', color: 'text-green-400', accentHex: '#34D399' },
+  { id: 'blue', accentHex: '#60A5FA' },
+  { id: 'amber', accentHex: '#FBBF24' },
+  { id: 'purple', accentHex: '#A78BFA' },
+  { id: 'green', accentHex: '#34D399' },
 ];
 
 export function WalkingAvatars() {
