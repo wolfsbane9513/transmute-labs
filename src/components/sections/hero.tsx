@@ -27,7 +27,7 @@ export function Hero() {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen min-h-[100dvh] flex items-center justify-center overflow-hidden">
+    <section id="hero" ref={containerRef} className="relative min-h-screen min-h-[100dvh] flex items-center justify-center overflow-hidden">
       {/* Dynamic background layer */}
       <DynamicBackground variant="hero" />
 
