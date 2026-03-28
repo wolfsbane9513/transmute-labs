@@ -1,7 +1,11 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import { SmoothScrollProvider } from '@/components/providers/smooth-scroll';
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { Hero } from '@/components/sections/hero';
+import { TechMarquee } from '@/components/ui/tech-marquee';
 import { Services } from '@/components/sections/services';
 import { CaseStudies } from '@/components/sections/case-studies';
 import { Team } from '@/components/sections/team';
@@ -12,14 +16,20 @@ export default function HomePage() {
   return (
     <SmoothScrollProvider>
       <Navbar />
-      <main id="main-content">
+      <motion.main 
+        id="main-content"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
         <Hero />
+        <TechMarquee />
         <Services />
         <CaseStudies />
         <Team />
         <Advantage />
         <Contact />
-      </main>
+      </motion.main>
       <Footer />
     </SmoothScrollProvider>
   );

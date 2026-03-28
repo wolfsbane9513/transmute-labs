@@ -2,17 +2,31 @@
 
 import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, Loader2, Check, Mail, MapPin, Clock, Sparkles } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { ArrowRight, Loader2, Check, Mail, MapPin, Clock } from 'lucide-react';
 import { Section } from '@/components/layout/section';
 import { Container } from '@/components/ui/container';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input, Select, Textarea } from '@/components/ui/input';
+import { SecureCore } from '@/components/ui/illustrations/secure-core';
 import { fadeInUp, fadeIn, staggerContainer } from '@/lib/animations';
 import { processSteps } from '@/lib/constants';
 
-type SubmitState = 'idle' | 'loading' | 'success';
+const contactSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Please enter a valid email address'),
+  company: z.string().optional(),
+  project: z.string().min(1, 'Please select a project type'),
+  message: z.string().min(10, 'Message must be at least 10 characters'),
+});
+
+type ContactFormData = z.infer<typeof contactSchema>;
+
+type SubmitState = 'idle' | 'loading' | 'success' | 'error';
 
 const projectOptions = [
   { value: '', label: 'Select project type' },
@@ -26,30 +40,39 @@ const projectOptions = [
 export function Contact() {
   const shouldReduceMotion = useReducedMotion();
   const itemVariant = shouldReduceMotion ? fadeIn : fadeInUp;
-
-  const [formData, setFormData] = useState({
-    name: '', email: '', company: '', project: '', message: '',
-  });
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: '', email: '', company: '', project: '', message: '',
+    }
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: ContactFormData) => {
     if (submitState !== 'idle') return;
 
     setSubmitState('loading');
-    setTimeout(() => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
       setSubmitState('success');
-      setFormData({ name: '', email: '', company: '', project: '', message: '' });
+      reset();
       setTimeout(() => setSubmitState('idle'), 3000);
-    }, 1500);
+    } catch {
+      setSubmitState('error');
+      setTimeout(() => setSubmitState('idle'), 3000);
+    }
   };
 
   return (
-    <Section id="contact" divider>
+    <Section id="contact" divider backgroundVariant="contact">
       <Container>
         <motion.div
           className="text-center max-w-2xl mx-auto mb-20"
@@ -83,57 +106,66 @@ export function Contact() {
                 <CardDescription>We&apos;ll get back within 4-6 hours</CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                   <div className="grid sm:grid-cols-2 gap-5">
-                    <Input
-                      label="Name"
-                      type="text"
-                      placeholder="Your name"
-                      value={formData.name}
-                      onChange={(e) => handleChange('name', e.target.value)}
-                      required
-                    />
-                    <Input
-                      label="Email"
-                      type="email"
-                      placeholder="you@company.com"
-                      value={formData.email}
-                      onChange={(e) => handleChange('email', e.target.value)}
-                      required
-                    />
+                    <div className="space-y-1">
+                      <Input
+                        label="Name"
+                        placeholder="Your name"
+                        {...register('name')}
+                        error={errors.name?.message}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Input
+                        label="Email"
+                        type="email"
+                        placeholder="you@company.com"
+                        {...register('email')}
+                        error={errors.email?.message}
+                      />
+                    </div>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-5">
-                    <Input
-                      label="Company"
-                      type="text"
-                      placeholder="Your company"
-                      value={formData.company}
-                      onChange={(e) => handleChange('company', e.target.value)}
-                    />
-                    <Select
-                      label="Project Type"
-                      options={projectOptions}
-                      value={formData.project}
-                      onChange={(e) => handleChange('project', e.target.value)}
+                    <div className="space-y-1">
+                      <Input
+                        label="Company"
+                        placeholder="Your company"
+                        {...register('company')}
+                        error={errors.company?.message}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Select
+                        label="Project Type"
+                        options={projectOptions}
+                        {...register('project')}
+                        error={errors.project?.message}
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Textarea
+                      label="Project Details"
+                      placeholder="What challenges are you looking to solve with AI?"
+                      rows={4}
+                      {...register('message')}
+                      error={errors.message?.message}
                     />
                   </div>
-                  <Textarea
-                    label="Project Details"
-                    placeholder="What challenges are you looking to solve with AI?"
-                    rows={4}
-                    value={formData.message}
-                    onChange={(e) => handleChange('message', e.target.value)}
-                  />
                   <Button
                     type="submit"
                     variant="primary"
                     size="lg"
+                    isMagnetic
                     className={`w-full transition-all duration-500 ${
                       submitState === 'success'
                         ? '!bg-gradient-to-r !from-emerald-400 !to-emerald-500 !shadow-emerald-500/20'
+                        : submitState === 'error'
+                        ? '!bg-gradient-to-r !from-rose-400 !to-rose-500 !shadow-rose-500/20'
                         : ''
                     }`}
-                    disabled={submitState !== 'idle'}
+                    disabled={submitState === 'loading'}
                   >
                     {submitState === 'idle' && (
                       <>
@@ -153,6 +185,11 @@ export function Contact() {
                         <Check className="ml-2 h-4 w-4" />
                       </>
                     )}
+                    {submitState === 'error' && (
+                      <>
+                        Something went wrong. Try again.
+                      </>
+                    )}
                   </Button>
                 </form>
               </CardContent>
@@ -161,6 +198,31 @@ export function Contact() {
 
           {/* Info — takes 2 columns */}
           <motion.div className="lg:col-span-2 space-y-6" variants={itemVariant}>
+            {/* Trust & Security */}
+            <Card className="overflow-hidden relative group">
+              <div className="absolute -top-4 -right-4 w-32 h-32 opacity-20 group-hover:opacity-40 transition-opacity">
+                <SecureCore />
+              </div>
+              <CardContent className="p-7 relative z-10">
+                <h3 className="text-lg font-semibold text-text-primary mb-6">Enterprise Trust</h3>
+                <div className="space-y-4">
+                  {[
+                    { label: 'SOC2 Ready', desc: 'Enterprise-grade security standards' },
+                    { label: 'Data Encryption', desc: 'End-to-end AES-256 protection' },
+                    { label: 'GDPR Compliant', desc: 'Full data privacy sovereignty' }
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-start space-x-3">
+                      <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent-amber" />
+                      <div>
+                        <div className="text-sm font-bold text-text-primary">{item.label}</div>
+                        <p className="text-[10px] text-text-muted leading-tight">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Contact info */}
             <Card>
               <CardContent className="p-7 space-y-5">
@@ -184,17 +246,35 @@ export function Contact() {
             <Card>
               <CardContent className="p-7">
                 <h3 className="text-lg font-semibold text-text-primary mb-6">Our Process</h3>
-                <div className="space-y-5">
+                <div className="space-y-6 relative">
+                  {/* Vertical Line */}
+                  <div className="absolute left-4 top-2 bottom-2 w-px bg-white/[0.08]" />
+                  
                   {processSteps.map((step, i) => (
-                    <div key={step.number} className="flex items-start space-x-4">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/20 to-amber-400/5 flex items-center justify-center flex-shrink-0">
+                    <motion.div 
+                      key={step.number} 
+                      className="flex items-start space-x-6 relative group cursor-default"
+                      whileHover={{ x: 4 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/20 to-amber-400/5 flex items-center justify-center flex-shrink-0 z-10 group-hover:scale-110 transition-transform shadow-lg shadow-amber-500/10">
                         <span className="text-amber-400 text-sm font-bold">{step.number}</span>
                       </div>
-                      <div>
-                        <h4 className="text-text-primary font-medium text-sm">{step.title}</h4>
-                        <p className="text-text-muted text-xs mt-0.5 leading-relaxed">{step.description}</p>
+                      <div className="pt-0.5">
+                        <h4 className="text-text-primary font-medium text-sm group-hover:text-amber-400 transition-colors">{step.title}</h4>
+                        <p className="text-text-muted text-xs mt-1.5 leading-relaxed group-hover:text-text-secondary transition-colors">{step.description}</p>
+                        
+                        <motion.div 
+                          className="mt-2 h-0 overflow-hidden text-[10px] text-accent-amber font-mono tracking-wider uppercase"
+                          initial={{ height: 0, opacity: 0 }}
+                          whileHover={{ height: 'auto', opacity: 1 }}
+                        >
+                          {i === 0 && "Phase 1: Analysis"}
+                          {i === 1 && "Phase 2: Development"}
+                          {i === 2 && "Phase 3: Launch"}
+                        </motion.div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </CardContent>

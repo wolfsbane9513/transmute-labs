@@ -2,10 +2,13 @@
 
 import React from 'react';
 import { cn } from '@/lib/cn';
+import { useCursorStore } from '@/lib/hooks';
+import { Magnetic } from '@/components/ui/magnetic';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'outline' | 'ghost';
   size?: 'default' | 'sm' | 'lg' | 'icon';
+  isMagnetic?: boolean;
 }
 
 const variantStyles: Record<string, string> = {
@@ -22,8 +25,20 @@ const sizeStyles: Record<string, string> = {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'default', children, ...props }, ref) => {
-    return (
+  ({ className, variant = 'primary', size = 'default', isMagnetic = false, onMouseEnter, onMouseLeave, children, ...props }, ref) => {
+    const { setType } = useCursorStore();
+
+    const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+      setType('hover');
+      onMouseEnter?.(e);
+    };
+
+    const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+      setType('default');
+      onMouseLeave?.(e);
+    };
+
+    const button = (
       <button
         ref={ref}
         className={cn(
@@ -36,11 +51,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           sizeStyles[size],
           className,
         )}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         {...props}
       >
         {children}
       </button>
     );
+
+    if (isMagnetic) {
+      return <Magnetic>{button}</Magnetic>;
+    }
+
+    return button;
   }
 );
 

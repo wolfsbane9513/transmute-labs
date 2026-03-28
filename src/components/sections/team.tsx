@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   Users, Award, Star, TrendingUp, CheckCircle, Zap, Bot, Globe, Linkedin, ArrowUpRight,
@@ -61,7 +62,7 @@ export function Team() {
               whileHover={{ y: -6, transition: { duration: 0.3 } }}
               className="group"
             >
-              <Card className="h-full text-center">
+              <Card className="h-full text-center" isViewable>
                 <CardHeader className="pb-4">
                   {/* Avatar placeholder with gradient */}
                   <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${memberGradients[i]} flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform duration-300`}>
@@ -115,14 +116,22 @@ export function Team() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="group/cat"
               >
-                <h4 className="text-amber-400 font-semibold mb-4 text-sm tracking-wide uppercase">{category.title}</h4>
-                <ul className="text-text-secondary text-sm space-y-2.5">
-                  {category.items.map((item) => (
-                    <li key={item} className="flex items-center space-x-2">
-                      <div className="w-1 h-1 rounded-full bg-text-muted" />
-                      <span>{item}</span>
-                    </li>
+                <h4 className="text-amber-400 font-semibold mb-6 text-sm tracking-wide uppercase group-hover/cat:text-amber-300 transition-colors">
+                  {category.title}
+                </h4>
+                <ul className="text-text-secondary text-sm space-y-3.5">
+                  {category.items.map((item, j) => (
+                    <motion.li 
+                      key={item} 
+                      className="flex items-center space-x-2 group/item"
+                      whileHover={{ x: 4 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="w-1 h-1 rounded-full bg-text-muted group-hover/item:bg-accent-amber transition-colors" />
+                      <span className="group-hover/item:text-text-primary transition-colors">{item}</span>
+                    </motion.li>
                   ))}
                 </ul>
               </motion.div>

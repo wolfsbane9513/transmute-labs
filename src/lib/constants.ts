@@ -1,3 +1,9 @@
+export const technologies = [
+  'Python', 'PyTorch', 'TensorFlow', 'OpenAI', 'LangChain', 
+  'Next.js', 'React', 'TypeScript', 'Node.js', 'PostgreSQL', 
+  'AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'FastAPI'
+];
+
 export const navLinks = [
   { label: 'Services', href: '#services' },
   { label: 'Case Studies', href: '#projects' },

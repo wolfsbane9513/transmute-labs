@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Bot, Briefcase, Target, Github, ExternalLink, ArrowUpRight } from 'lucide-react';
 import { Section } from '@/components/layout/section';
@@ -37,7 +38,7 @@ export function CaseStudies() {
   const itemVariant = shouldReduceMotion ? fadeIn : fadeInUp;
 
   return (
-    <Section id="projects" bg="base" divider>
+    <Section id="projects" bg="base" divider backgroundVariant="case-studies">
       <Container>
         <motion.div
           className="max-w-2xl mb-20"
@@ -89,7 +90,7 @@ export function CaseStudies() {
                 whileHover={{ y: -6, transition: { duration: 0.3 } }}
                 className="group"
               >
-                <Card className="h-full">
+                <Card className="h-full" isViewable>
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/[0.08] to-white/[0.02] flex items-center justify-center">
