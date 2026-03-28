@@ -12,121 +12,137 @@ interface AvatarAgentProps {
   startY: number;
 }
 
-function PixelRobotSVG({ id, accentHex }: { id: string; accentHex: string }) {
-  // 10x12 grid patterns for each agent
-  const patterns: Record<string, string[]> = {
-    blue: [
-      "  XXXXXX  ",
-      " X      X ",
-      "X  O  O  X",
-      "X        X",
-      "X  XXXX  X",
-      " XXXXXXXX ",
-      "    XX    ",
-      "  XXXXXX  ",
-      " X XXXX X ",
-      " X XXXX X ",
-      "   X  X   ",
-      "  XX  XX  ",
-    ],
-    amber: [
-      "    XX    ",
-      "   XXXX   ",
-      "  X XX X  ",
-      " XXXXXXXX ",
-      "XX  OO  XX",
-      "XXXXXXXXXX",
-      "  XXXXXX  ",
-      "   XXXX   ",
-      "  XXXXXX  ",
-      " XX    XX ",
-      " XX    XX ",
-      "XXX    XXX",
-    ],
-    purple: [
-      "  XXXXXX  ",
-      " X      X ",
-      "X  X  X  X",
-      "X  O  O  X",
-      "X  XXXX  X",
-      " XXXXXXXX ",
-      " XXXXXXXX ",
-      "XXXXXXXXXX",
-      "XXXXXXXXXX",
-      "  XXXXXX  ",
-      "  X    X  ",
-      " XX    XX ",
-    ],
-    green: [
-      " XXXXXXXX ",
-      " X  XX  X ",
-      " XXXXXXXX ",
-      " XX OO XX ",
-      " XXXXXXXX ",
-      " X  XX  X ",
-      " XXXXXXXX ",
-      "    XX    ",
-      "  XXXXXX  ",
-      "  X    X  ",
-      "  X    X  ",
-      " XXX  XXX ",
-    ],
-  };
+// Pre-compute stable random values per robot id to avoid Math.random() in render
+const stableValues: Record<string, { opacities: number[][]; durations: number[][] }> = {};
 
+function getStableValues(id: string, pattern: string[]) {
+  if (!stableValues[id]) {
+    stableValues[id] = {
+      opacities: pattern.map((row) =>
+        row.split('').map(() => 0.85 + Math.random() * 0.15)
+      ),
+      durations: pattern.map((row) =>
+        row.split('').map(() => 2 + Math.random() * 2)
+      ),
+    };
+  }
+  return stableValues[id];
+}
+
+const patterns: Record<string, string[]> = {
+  blue: [
+    "  XXXXXX  ",
+    " X      X ",
+    "X  O  O  X",
+    "X        X",
+    "X  XXXX  X",
+    " XXXXXXXX ",
+    "    XX    ",
+    "  XXXXXX  ",
+    " X XXXX X ",
+    " X XXXX X ",
+    "   X  X   ",
+    "  XX  XX  ",
+  ],
+  amber: [
+    "    XX    ",
+    "   XXXX   ",
+    "  X XX X  ",
+    " XXXXXXXX ",
+    "XX  OO  XX",
+    "XXXXXXXXXX",
+    "  XXXXXX  ",
+    "   XXXX   ",
+    "  XXXXXX  ",
+    " XX    XX ",
+    " XX    XX ",
+    "XXX    XXX",
+  ],
+  purple: [
+    "  XXXXXX  ",
+    " X      X ",
+    "X  X  X  X",
+    "X  O  O  X",
+    "X  XXXX  X",
+    " XXXXXXXX ",
+    " XXXXXXXX ",
+    "XXXXXXXXXX",
+    "XXXXXXXXXX",
+    "  XXXXXX  ",
+    "  X    X  ",
+    " XX    XX ",
+  ],
+  green: [
+    " XXXXXXXX ",
+    " X  XX  X ",
+    " XXXXXXXX ",
+    " XX OO XX ",
+    " XXXXXXXX ",
+    " X  XX  X ",
+    " XXXXXXXX ",
+    "    XX    ",
+    "  XXXXXX  ",
+    "  X    X  ",
+    "  X    X  ",
+    " XXX  XXX ",
+  ],
+};
+
+function PixelRobotSVG({ id, accentHex }: { id: string; accentHex: string }) {
   const pattern = patterns[id] || patterns.blue;
+  const { opacities, durations } = getStableValues(id, pattern);
 
   return (
     <div className="relative group">
-      {/* Pixel Glow Effect */}
-      <div 
+      <div
         className="absolute inset-0 blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500"
         style={{ backgroundColor: accentHex }}
       />
-      <svg 
-        width="40" 
-        height="48" 
-        viewBox="0 0 10 12" 
+      <svg
+        width="40"
+        height="48"
+        viewBox="0 0 10 12"
         className="relative z-10 drop-shadow-[0_0_2px_rgba(255,255,255,0.2)]"
       >
-        {pattern.map((row, y) => 
-          row.split('').map((char, x) => {
-            if (char === 'X') {
-              return (
-                <rect 
-                  key={`${x}-${y}`} 
-                  x={x} 
-                  y={y} 
-                  width="1" 
-                  height="1" 
-                  fill={accentHex}
-                  style={{
-                    opacity: 0.85 + Math.random() * 0.15,
-                  }}
-                />
-              );
-            }
-            if (char === 'O') {
-              return (
-                <rect 
-                  key={`${x}-${y}`} 
-                  x={x} 
-                  y={y} 
-                  width="1" 
-                  height="1" 
-                  fill="white"
-                >
-                  <animate 
-                    attributeName="opacity" 
-                    values="0.4;1;0.4" 
-                    dur={`${2 + Math.random() * 2}s`} 
-                    repeatCount="indefinite" 
+        {pattern.map((row, y) => (
+          <React.Fragment key={y}>
+            {row.split('').map((char, x) => {
+              if (char === 'X') {
+                return (
+                  <rect
+                    key={`${x}-${y}`}
+                    x={x}
+                    y={y}
+                    width="1"
+                    height="1"
+                    fill={accentHex}
+                    opacity={opacities[y][x]}
                   />
-                </rect>
-              );
-            }
-            return null;
-          })
-        )}
+                );
+              }
+              if (char === 'O') {
+                return (
+                  <rect
+                    key={`${x}-${y}`}
+                    x={x}
+                    y={y}
+                    width="1"
+                    height="1"
+                    fill="white"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.4;1;0.4"
+                      dur={`${durations[y][x]}s`}
+                      repeatCount="indefinite"
+                    />
+                  </rect>
+                );
+              }
+              return null;
+            })}
+          </React.Fragment>
+        ))}
       </svg>
     </div>
   );
@@ -136,6 +152,7 @@ export function AvatarAgent({ id, accentHex, startX, startY }: AvatarAgentProps)
   const [position, setPosition] = useState({ x: startX, y: startY });
   const [facingRight, setFacingRight] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const isHoveredRef = useRef(false);
   const [quip, setQuip] = useState('');
   const animFrameRef = useRef<number>(0);
   const targetRef = useRef({ x: startX, y: startY });
@@ -166,7 +183,7 @@ export function AvatarAgent({ id, accentHex, startX, startY }: AvatarAgentProps)
       if (!running) return;
 
       const now = Date.now();
-      if (now < pauseUntilRef.current || isHovered) {
+      if (now < pauseUntilRef.current || isHoveredRef.current) {
         animFrameRef.current = requestAnimationFrame(animate);
         return;
       }
@@ -208,10 +225,11 @@ export function AvatarAgent({ id, accentHex, startX, startY }: AvatarAgentProps)
       cancelAnimationFrame(animFrameRef.current);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [pickNewTarget, isHovered]);
+  }, [pickNewTarget]);
 
   const handleHover = () => {
     setIsHovered(true);
+    isHoveredRef.current = true;
     trackAvatarHover(id);
     const quips = avatarQuips[id] || avatarQuips.blue;
     setQuip(quips[Math.floor(Math.random() * quips.length)]);
@@ -219,6 +237,7 @@ export function AvatarAgent({ id, accentHex, startX, startY }: AvatarAgentProps)
 
   const handleLeave = () => {
     setIsHovered(false);
+    isHoveredRef.current = false;
   };
 
   return (
