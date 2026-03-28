@@ -11,6 +11,7 @@ import { CaseStudies } from '@/components/sections/case-studies';
 import { Team } from '@/components/sections/team';
 import { Advantage } from '@/components/sections/advantage';
 import { Contact } from '@/components/sections/contact';
+import { SectionTracker } from '@/components/ui/section-tracker';
 
 export default function HomePage() {
   return (
@@ -22,6 +23,7 @@ export default function HomePage() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
+        <SectionTracker />
         <Hero />
         <TechMarquee />
         <Services />

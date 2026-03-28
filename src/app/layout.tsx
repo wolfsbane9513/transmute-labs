@@ -2,6 +2,10 @@ import type { Metadata } from 'next'
 import { DM_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { CustomCursor } from '@/components/ui/custom-cursor'
+import { ChatWidget } from '@/components/ui/chat-widget'
+import { WalkingAvatars } from '@/components/ui/walking-avatars'
+import { AchievementToast } from '@/components/ui/achievement-toast'
+import { EasterEggs } from '@/components/ui/easter-eggs'
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -51,6 +55,10 @@ export default function RootLayout({
           Skip to content
         </a>
         <CustomCursor />
+        <ChatWidget />
+        <WalkingAvatars />
+        <AchievementToast />
+        <EasterEggs />
         {children}
       </body>
     </html>
