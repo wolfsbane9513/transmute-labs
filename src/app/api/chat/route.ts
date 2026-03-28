@@ -1,6 +1,13 @@
 import Groq from 'groq-sdk';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// Lazy-init to avoid crash during build when env var is absent
+let _groq: Groq | null = null;
+function getGroq(): Groq {
+  if (!_groq) {
+    _groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' });
+  }
+  return _groq;
+}
 
 // ─── Rate limiting (in-memory, per-IP) ───
 const rateMap = new Map<string, { count: number; resetAt: number }>();
@@ -82,6 +89,13 @@ export async function POST(req: Request) {
       });
     }
 
+    if (!process.env.GROQ_API_KEY) {
+      return new Response(JSON.stringify({ error: 'Chat is not configured' }), {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     const body = await req.json();
     const { messages } = body as { messages: ChatMessage[] };
 
@@ -113,7 +127,7 @@ export async function POST(req: Request) {
     // Only send recent history to save tokens
     const recentMessages = sanitized.slice(-MAX_HISTORY_MESSAGES);
 
-    const stream = await groq.chat.completions.create({
+    const stream = await getGroq().chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
