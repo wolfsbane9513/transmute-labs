@@ -56,6 +56,19 @@ export function ChatWidget() {
           body: JSON.stringify({ messages: newMessages }),
         });
 
+        if (res.status === 429) {
+          setMessages((prev) => {
+            const updated = [...prev];
+            updated[updated.length - 1] = {
+              role: 'assistant',
+              content: "You're sending messages too fast! Please wait a moment and try again.",
+            };
+            return updated;
+          });
+          setIsStreaming(false);
+          return;
+        }
+
         if (!res.ok) throw new Error('Failed to get response');
 
         const reader = res.body?.getReader();
@@ -252,7 +265,8 @@ export function ChatWidget() {
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask anything..."
+                  placeholder="Ask about our services..."
+                  maxLength={500}
                   disabled={isStreaming}
                   className="flex-1 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-1 focus:ring-amber-400/30 focus:border-amber-400/20 transition-all disabled:opacity-50"
                 />
