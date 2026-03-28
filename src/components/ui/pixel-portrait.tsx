@@ -88,44 +88,45 @@ export function PixelPortrait({ variant, color }: PixelPortraitProps) {
         viewBox="0 0 12 12" 
         className="relative z-10 drop-shadow-lg"
       >
-        {pattern.map((row, y) => 
-          row.split('').map((char, x) => {
-            if (char === 'X') {
-              return (
-                <rect 
-                  key={`${x}-${y}`} 
-                  x={x} 
-                  y={y} 
-                  width="1" 
-                  height="1" 
-                  fill={color}
-                  className="transition-all duration-300"
-                />
-              );
-            }
-            if (char === 'O') {
-              return (
-                <rect 
-                  key={`${x}-${y}`} 
-                  x={x} 
-                  y={y} 
-                  width="1" 
-                  height="1" 
-                  fill="white"
-                  opacity="0.9"
-                >
-                  <animate 
-                    attributeName="opacity" 
-                    values="0.5;1;0.5" 
-                    dur="3s" 
-                    repeatCount="indefinite" 
+        {pattern.map((row, y) => (
+          <React.Fragment key={y}>
+            {row.split('').map((char, x) => {
+              if (char === 'X') {
+                return (
+                  <rect
+                    key={`${x}-${y}`}
+                    x={x}
+                    y={y}
+                    width="1"
+                    height="1"
+                    fill={color}
                   />
-                </rect>
-              );
-            }
-            return null;
-          })
-        )}
+                );
+              }
+              if (char === 'O') {
+                return (
+                  <rect
+                    key={`${x}-${y}`}
+                    x={x}
+                    y={y}
+                    width="1"
+                    height="1"
+                    fill="white"
+                    opacity="0.9"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.5;1;0.5"
+                      dur="3s"
+                      repeatCount="indefinite"
+                    />
+                  </rect>
+                );
+              }
+              return null;
+            })}
+          </React.Fragment>
+        ))}
       </svg>
     </div>
   );
