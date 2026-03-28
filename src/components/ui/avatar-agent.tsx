@@ -7,41 +7,132 @@ import { useGameStore } from '@/lib/game-store';
 
 interface AvatarAgentProps {
   id: string;
-  color: string;
   accentHex: string;
   startX: number;
   startY: number;
 }
 
-function RobotSVG({ color, accentHex }: { color: string; accentHex: string }) {
+function PixelRobotSVG({ id, accentHex }: { id: string; accentHex: string }) {
+  // 10x12 grid patterns for each agent
+  const patterns: Record<string, string[]> = {
+    blue: [
+      "  XXXXXX  ",
+      " X      X ",
+      "X  O  O  X",
+      "X        X",
+      "X  XXXX  X",
+      " XXXXXXXX ",
+      "    XX    ",
+      "  XXXXXX  ",
+      " X XXXX X ",
+      " X XXXX X ",
+      "   X  X   ",
+      "  XX  XX  ",
+    ],
+    amber: [
+      "    XX    ",
+      "   XXXX   ",
+      "  X XX X  ",
+      " XXXXXXXX ",
+      "XX  OO  XX",
+      "XXXXXXXXXX",
+      "  XXXXXX  ",
+      "   XXXX   ",
+      "  XXXXXX  ",
+      " XX    XX ",
+      " XX    XX ",
+      "XXX    XXX",
+    ],
+    purple: [
+      "  XXXXXX  ",
+      " X      X ",
+      "X  X  X  X",
+      "X  O  O  X",
+      "X  XXXX  X",
+      " XXXXXXXX ",
+      " XXXXXXXX ",
+      "XXXXXXXXXX",
+      "XXXXXXXXXX",
+      "  XXXXXX  ",
+      "  X    X  ",
+      " XX    XX ",
+    ],
+    green: [
+      " XXXXXXXX ",
+      " X  XX  X ",
+      " XXXXXXXX ",
+      " XX OO XX ",
+      " XXXXXXXX ",
+      " X  XX  X ",
+      " XXXXXXXX ",
+      "    XX    ",
+      "  XXXXXX  ",
+      "  X    X  ",
+      "  X    X  ",
+      " XXX  XXX ",
+    ],
+  };
+
+  const pattern = patterns[id] || patterns.blue;
+
   return (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-      {/* Antenna */}
-      <line x1="18" y1="2" x2="18" y2="7" stroke={accentHex} strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="18" cy="2" r="1.5" fill={accentHex} opacity="0.8">
-        <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite" />
-      </circle>
-      {/* Head */}
-      <rect x="8" y="7" width="20" height="16" rx="4" fill="currentColor" className={color} opacity="0.15" stroke={accentHex} strokeWidth="1" strokeOpacity="0.3" />
-      {/* Eyes */}
-      <circle cx="13" cy="15" r="2.5" fill={accentHex} opacity="0.9">
-        <animate attributeName="r" values="2.5;2;2.5" dur="3s" repeatCount="indefinite" />
-      </circle>
-      <circle cx="23" cy="15" r="2.5" fill={accentHex} opacity="0.9">
-        <animate attributeName="r" values="2.5;2;2.5" dur="3s" repeatCount="indefinite" />
-      </circle>
-      {/* Mouth */}
-      <path d="M13 20 Q18 23 23 20" stroke={accentHex} strokeWidth="1" fill="none" opacity="0.5" strokeLinecap="round" />
-      {/* Body */}
-      <rect x="11" y="24" width="14" height="8" rx="3" fill="currentColor" className={color} opacity="0.1" stroke={accentHex} strokeWidth="1" strokeOpacity="0.2" />
-      {/* Legs */}
-      <line x1="14" y1="32" x2="14" y2="35" stroke={accentHex} strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
-      <line x1="22" y1="32" x2="22" y2="35" stroke={accentHex} strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
-    </svg>
+    <div className="relative group">
+      {/* Pixel Glow Effect */}
+      <div 
+        className="absolute inset-0 blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500"
+        style={{ backgroundColor: accentHex }}
+      />
+      <svg 
+        width="40" 
+        height="48" 
+        viewBox="0 0 10 12" 
+        className="relative z-10 drop-shadow-[0_0_2px_rgba(255,255,255,0.2)]"
+      >
+        {pattern.map((row, y) => 
+          row.split('').map((char, x) => {
+            if (char === 'X') {
+              return (
+                <rect 
+                  key={`${x}-${y}`} 
+                  x={x} 
+                  y={y} 
+                  width="1" 
+                  height="1" 
+                  fill={accentHex}
+                  style={{
+                    opacity: 0.85 + Math.random() * 0.15,
+                  }}
+                />
+              );
+            }
+            if (char === 'O') {
+              return (
+                <rect 
+                  key={`${x}-${y}`} 
+                  x={x} 
+                  y={y} 
+                  width="1" 
+                  height="1" 
+                  fill="white"
+                >
+                  <animate 
+                    attributeName="opacity" 
+                    values="0.4;1;0.4" 
+                    dur={`${2 + Math.random() * 2}s`} 
+                    repeatCount="indefinite" 
+                  />
+                </rect>
+              );
+            }
+            return null;
+          })
+        )}
+      </svg>
+    </div>
   );
 }
 
-export function AvatarAgent({ id, color, accentHex, startX, startY }: AvatarAgentProps) {
+export function AvatarAgent({ id, accentHex, startX, startY }: AvatarAgentProps) {
   const [position, setPosition] = useState({ x: startX, y: startY });
   const [facingRight, setFacingRight] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -53,7 +144,7 @@ export function AvatarAgent({ id, color, accentHex, startX, startY }: AvatarAgen
   const trackAvatarHover = useGameStore((s) => s.trackAvatarHover);
 
   const pickNewTarget = useCallback(() => {
-    const padding = 60;
+    const padding = 100;
     const maxX = (typeof window !== 'undefined' ? window.innerWidth : 1200) - padding;
     const maxY = (typeof window !== 'undefined' ? window.innerHeight : 800) - padding;
     targetRef.current = {
@@ -67,7 +158,7 @@ export function AvatarAgent({ id, color, accentHex, startX, startY }: AvatarAgen
     if (typeof window === 'undefined') return;
 
     let running = true;
-    const speed = 0.3 + Math.random() * 0.2; // pixels per frame
+    const speed = 0.25 + Math.random() * 0.15;
 
     pickNewTarget();
 
@@ -85,7 +176,6 @@ export function AvatarAgent({ id, color, accentHex, startX, startY }: AvatarAgen
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist < 5) {
-        // Reached target, pause then pick new one
         pauseUntilRef.current = now + 2000 + Math.random() * 3000;
         pickNewTarget();
       } else {
@@ -136,10 +226,10 @@ export function AvatarAgent({ id, color, accentHex, startX, startY }: AvatarAgen
       className="fixed z-50 cursor-pointer select-none"
       style={{ left: position.x, top: position.y }}
       animate={{
-        y: isHovered ? 0 : [0, -3, 0],
+        y: isHovered ? 0 : [0, -4, 0],
       }}
       transition={{
-        y: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+        y: { duration: 2.5, repeat: Infinity, ease: 'easeInOut' },
       }}
       onMouseEnter={handleHover}
       onMouseLeave={handleLeave}
@@ -148,24 +238,23 @@ export function AvatarAgent({ id, color, accentHex, startX, startY }: AvatarAgen
       <AnimatePresence>
         {isHovered && quip && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.9 }}
+            initial={{ opacity: 0, y: 8, scale: 0.9, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, scale: 1, x: '-50%' }}
+            exit={{ opacity: 0, y: 8, scale: 0.9, x: '-50%' }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 px-3 py-2 rounded-xl text-[11px] leading-relaxed text-text-secondary border border-white/[0.08] shadow-lg"
+            className="absolute bottom-full left-1/2 mb-3 w-56 px-4 py-3 rounded-2xl text-[12px] leading-relaxed text-text-primary border border-white/[0.1] shadow-2xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(10,10,27,0.95) 0%, rgba(5,5,16,0.98) 100%)',
-              backdropFilter: 'blur(12px)',
+              background: 'linear-gradient(135deg, rgba(15,15,35,0.95) 0%, rgba(5,5,20,0.98) 100%)',
+              backdropFilter: 'blur(16px)',
             }}
           >
             {quip}
-            {/* Arrow */}
             <div
               className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
               style={{
-                borderLeft: '5px solid transparent',
-                borderRight: '5px solid transparent',
-                borderTop: '5px solid rgba(255,255,255,0.08)',
+                borderLeft: '6px solid transparent',
+                borderRight: '6px solid transparent',
+                borderTop: '6px solid rgba(255,255,255,0.1)',
               }}
             />
           </motion.div>
@@ -175,9 +264,9 @@ export function AvatarAgent({ id, color, accentHex, startX, startY }: AvatarAgen
       {/* Avatar */}
       <div
         style={{ transform: facingRight ? 'scaleX(1)' : 'scaleX(-1)' }}
-        className="transition-transform duration-300"
+        className="transition-transform duration-500"
       >
-        <RobotSVG color={color} accentHex={accentHex} />
+        <PixelRobotSVG id={id} accentHex={accentHex} />
       </div>
     </motion.div>
   );
