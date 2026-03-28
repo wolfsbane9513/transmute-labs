@@ -1,91 +1,82 @@
 'use client';
 
-import { useRef, useEffect, useState, useCallback } from 'react';
-import { useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
+import { useScroll, useTransform, useSpring } from 'framer-motion';
+import { create } from 'zustand';
 
-// ─── Parallax scroll effect ───
-export function useParallax(offset: number = 50) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], [offset, -offset]);
-  const smoothY = useSpring(y, { stiffness: 100, damping: 30, restDelta: 0.001 });
-  return { ref, y: smoothY };
+// --- Cursor Store ---
+type CursorType = 'default' | 'hover' | 'active' | 'view';
+
+interface CursorStore {
+  type: CursorType;
+  setType: (type: CursorType) => void;
 }
 
-// ─── Animated counter (counts up on scroll into view) ───
-export function useCountUp(target: number, duration: number = 2500) {
+export const useCursorStore = create<CursorStore>((set) => ({
+  type: 'default',
+  setType: (type) => set({ type }),
+}));
+
+// --- useCountUp ---
+export function useCountUp(end: number, duration: number = 2000) {
   const [count, setCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasStarted) {
+        if (entry.isIntersecting) {
           setHasStarted(true);
-          const startTime = performance.now();
-
-          const animate = (now: number) => {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            // easeOutCubic
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.round(eased * target));
-
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            }
-          };
-
-          requestAnimationFrame(animate);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
-    observer.observe(el);
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
     return () => observer.disconnect();
-  }, [target, duration, hasStarted]);
+  }, []);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+
+    let start = 0;
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function: easeOutExpo
+      const easedProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      
+      const currentCount = Math.floor(easedProgress * end);
+      setCount(currentCount);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [hasStarted, end, duration]);
 
   return { ref, count };
 }
 
-// ─── Scroll progress for a section ───
-export function useSectionProgress() {
-  const ref = useRef<HTMLDivElement>(null);
+// --- useParallax ---
+export function useParallax(distance: number = 50) {
+  const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
   });
-  return { ref, progress: scrollYProgress };
-}
 
-// ─── Mouse position relative to element ───
-export function useMousePosition() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0.5, y: 0.5 });
+  const y = useTransform(scrollYProgress, [0, 1], [-distance, distance]);
+  const springY = useSpring(y, { stiffness: 100, damping: 30, mass: 0.5 });
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    setPosition({
-      x: (e.clientX - rect.left) / rect.width,
-      y: (e.clientY - rect.top) / rect.height,
-    });
-  }, []);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.addEventListener('mousemove', handleMouseMove);
-    return () => el.removeEventListener('mousemove', handleMouseMove);
-  }, [handleMouseMove]);
-
-  return { ref, position };
+  return { ref, y: springY };
 }
